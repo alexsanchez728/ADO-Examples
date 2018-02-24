@@ -2,18 +2,20 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Collections.Generic;
+using System.Configuration;
 using ADOExample.DataAccess.Models;
 
 namespace ADOExample.DataAccess
 {
     class InvoiceQuery
     {
-        public List<Invoice> GetInvoiceByTrackFirstLetter(string firstCharacter) {
+        readonly string _connectionString = ConfigurationManager.ConnectionStrings["Chinook"].ConnectionString;
 
-            using (var connection = new SqlConnection("Server=(local);Database=Chinook;Trusted_Connection=True;"))
+        public List<Invoice> GetInvoiceByTrackFirstLetter(string firstCharacter)
+        {
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-
                 var cmd = connection.CreateCommand();
                 cmd.CommandText = $@"select i.*
                                     from invoice i
@@ -49,9 +51,9 @@ namespace ADOExample.DataAccess
                 invoices.Add(invoice);
 
                 }
+
                 return invoices;
             }
         }
     }
-
 }
